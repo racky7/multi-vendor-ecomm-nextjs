@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Category } from "@/payload-types";
-import { CustomCategory } from "../types";
+import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
 interface Props {
   isOpen: boolean;
@@ -8,7 +8,7 @@ interface Props {
     top: number;
     left: number;
   };
-  category: CustomCategory;
+  category: CategoriesGetManyOutput[0];
 }
 
 export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
