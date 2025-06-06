@@ -7,19 +7,31 @@ import { ProductCard, ProductCardSkeleton } from "./product-card";
 import { DEFAULT_LIMIT } from "@/constants";
 import { Button } from "@/components/ui/button";
 import { InboxIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   category?: string;
+  tenantSubdomain?: string;
+  narrowView?: boolean;
 }
 
-export const ProductList = ({ category }: Props) => {
+export const ProductList = ({
+  category,
+  tenantSubdomain,
+  narrowView,
+}: Props) => {
   const [filters] = useProductFilters();
 
   const trpc = useTRPC();
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } =
     useSuspenseInfiniteQuery(
       trpc.products.getMany.infiniteQueryOptions(
-        { ...filters, category, limit: DEFAULT_LIMIT },
+        {
+          ...filters,
+          category,
+          tenantSubdomain,
+          limit: DEFAULT_LIMIT,
+        },
         {
           getNextPageParam: (lastPage) => {
             return lastPage.docs.length > 0 ? lastPage.nextPage : undefined;
@@ -43,8 +55,10 @@ export const ProductList = ({ category }: Props) => {
   return (
     <>
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2
-        lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4"
+        className={cn(
+          "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
+          narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3",
+        )}
       >
         {data?.pages
           .flatMap((page) => page.docs)
@@ -55,7 +69,8 @@ export const ProductList = ({ category }: Props) => {
               name={product.name}
               price={product.price}
               imageUrl={product.image?.url}
-              authorUsername="racky"
+              tenantSubdomain={product.tenant?.subdomain}
+              tenantImageUrl={product.tenant?.image?.url}
               reviewCount={200}
               reviewRating={4}
             />
@@ -79,11 +94,13 @@ export const ProductList = ({ category }: Props) => {
   );
 };
 
-export const ProductListSkeleton = () => {
+export const ProductListSkeleton = ({ narrowView }: Props) => {
   return (
     <div
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2
-    lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4"
+      className={cn(
+        "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4",
+        narrowView && "lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3",
+      )}
     >
       {Array.from({ length: DEFAULT_LIMIT }).map((_, index) => (
         <ProductCardSkeleton key={index} />
