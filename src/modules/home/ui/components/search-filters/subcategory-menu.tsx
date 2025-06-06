@@ -4,14 +4,11 @@ import { CategoriesGetManyOutput } from "@/modules/categories/types";
 
 interface Props {
   isOpen: boolean;
-  position: {
-    top: number;
-    left: number;
-  };
+
   category: CategoriesGetManyOutput[0];
 }
 
-export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
+export const SubcategoryMenu = ({ category, isOpen }: Props) => {
   if (
     !isOpen ||
     !category.subcategories ||
@@ -24,10 +21,10 @@ export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
 
   return (
     <div
-      className="fixed z-100"
+      className="absolute z-100"
       style={{
-        top: position.top,
-        left: position.left,
+        top: "100%",
+        left: 0,
       }}
     >
       {/* Invisible bridge to maintain hover */}
@@ -35,7 +32,7 @@ export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
 
       <div
         style={{ backgroundColor }}
-        className="w-60 text-black rounded-md overflow-hidden border 
+        className="w-60 text-black rounded-md overflow-hidden border
         shadow-[4px_4px_0_0_rgba(0,0,0,1)] -translate-x-[2px] -translate-y-[2px]"
       >
         <div>
@@ -43,7 +40,7 @@ export const SubcategoryMenu = ({ category, isOpen, position }: Props) => {
             <Link
               key={subcategory.slug}
               href={`/${category.slug}/${subcategory.slug}`}
-              className="w-full text-left p-4 hover:bg-black hover:text-white 
+              className="w-full text-left p-4 hover:bg-black hover:text-white
               flex justify-between items-center underline font-medium"
             >
               {subcategory.name}
