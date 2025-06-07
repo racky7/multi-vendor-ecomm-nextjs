@@ -22,7 +22,7 @@ export const Navbar = ({ subdomain }: Props) => {
     <nav className="h-20 border-b font-medium bg-white">
       <div className="max-w-(--breakpoint-xl) mx-auto flex justify-between items-center h-full px-4 lg:px-12">
         <Link
-          href={generateTenantSubdomain(subdomain)}
+          href={`/${generateTenantSubdomain(subdomain)}`}
           className="flex items-center gap-2"
         >
           {data.image?.url && (
