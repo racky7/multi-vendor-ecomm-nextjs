@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function generateTenantSubdomain(subdomain: string) {
+export function generateTenantURL(subdomain: string) {
   return `tenants/${subdomain}`;
 }
 

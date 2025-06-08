@@ -1,10 +1,29 @@
 "use client";
 
-import { generateTenantSubdomain } from "@/lib/utils";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+
+import { generateTenantURL } from "@/lib/utils";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ShoppingCartIcon } from "lucide-react";
+
+const CheckoutButton = dynamic(
+  () =>
+    import("@/modules/checkout/ui/components/checkout-button").then(
+      (mod) => mod.CheckoutButton,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <Button disabled className="bg-white">
+        <ShoppingCartIcon className="text-black" />
+      </Button>
+    ),
+  },
+);
 
 interface Props {
   subdomain: string;
@@ -22,7 +41,7 @@ export const Navbar = ({ subdomain }: Props) => {
     <nav className="h-20 border-b font-medium bg-white">
       <div className="max-w-(--breakpoint-xl) mx-auto flex justify-between items-center h-full px-4 lg:px-12">
         <Link
-          href={`/${generateTenantSubdomain(subdomain)}`}
+          href={`/${generateTenantURL(subdomain)}`}
           className="flex items-center gap-2"
         >
           {data.image?.url && (
@@ -36,6 +55,7 @@ export const Navbar = ({ subdomain }: Props) => {
           )}
           <p className="text-xl">{data.name}</p>
         </Link>
+        <CheckoutButton hideIfEmpty tenantSubdomain={subdomain} />
       </div>
     </nav>
   );
@@ -46,7 +66,9 @@ export const NavbarSkeleton = () => {
     <nav className="h-20 border-b font-medium bg-white">
       <div className="max-w-(--breakpoint-xl) mx-auto flex justify-between items-center h-full px-4 lg:px-12">
         <div />
-        {/* TODO: Skeleton for checkout button */}
+        <Button disabled className="bg-white">
+          <ShoppingCartIcon className="text-black" />
+        </Button>
       </div>
     </nav>
   );

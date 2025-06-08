@@ -3,15 +3,28 @@
 // TODO: Add real ratings
 
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useTRPC } from "@/trpc/client";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { formatCurrency, generateTenantSubdomain } from "@/lib/utils";
+import { formatCurrency, generateTenantURL } from "@/lib/utils";
 import Link from "next/link";
 import { StarRating } from "@/components/star-rating";
 import { Button } from "@/components/ui/button";
 import { LinkIcon, StarIcon } from "lucide-react";
 import { Fragment } from "react";
 import { Progress } from "@/components/ui/progress";
+
+const CartButton = dynamic(
+  () => import("../components/cart-button").then((mod) => mod.CartButton),
+  {
+    ssr: false,
+    loading: () => (
+      <Button disabled className="flex-1 bg-pink-400">
+        Add to cart
+      </Button>
+    ),
+  },
+);
 
 interface Props {
   productId: string;
@@ -53,7 +66,7 @@ export const ProductView = ({ productId, tenantSubdomain }: Props) => {
               </div>
               <div className="px-6 py-4 flex items-center justify-center lg:border-r">
                 <Link
-                  href={`/${generateTenantSubdomain(tenantSubdomain)}`}
+                  href={`/${generateTenantURL(tenantSubdomain)}`}
                   className="flex items-center gap-2"
                 >
                   {data.tenant.image?.url && (
@@ -99,9 +112,10 @@ export const ProductView = ({ productId, tenantSubdomain }: Props) => {
             <div className="border-t lg:border-t-0 lg:border-l h-full">
               <div className="flex flex-col gap-4 p-6 border-b">
                 <div className="flex flex-row items-center gap-2">
-                  <Button variant="elevated" className="flex-1 bg-pink-400">
-                    Add to cart
-                  </Button>
+                  <CartButton
+                    tenantSubdomain={tenantSubdomain}
+                    productId={productId}
+                  />
                   <Button
                     className="size-12"
                     variant="elevated"
