@@ -11,12 +11,11 @@ interface CartState {
   removeProduct: (tenantSubdomain: string, productId: string) => void;
   clearCart: (tenantSubdomain: string) => void;
   clearAllCarts: () => void;
-  getCartByTenant: (tenantSubdomain: string) => string[];
 }
 
 export const useCartStore = create<CartState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       tenantCarts: {},
       addProduct: (tenantSubdomain, productId) => {
         set((state) => ({
@@ -58,13 +57,10 @@ export const useCartStore = create<CartState>()(
           tenantCarts: {},
         });
       },
-      getCartByTenant: (tenantSubdomain) => {
-        return get().tenantCarts[tenantSubdomain]?.productIds || [];
-      },
     }),
     {
       name: "funroadCart",
       storage: createJSONStorage(() => localStorage),
-    }
-  )
+    },
+  ),
 );

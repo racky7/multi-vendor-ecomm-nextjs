@@ -1,37 +1,57 @@
+import { useCallback } from "react";
+import { useShallow } from "zustand/react/shallow";
 import { useCartStore } from "../store/use-cart-store";
 
 export const useCart = (tenantSubdomain: string) => {
-  const {
-    addProduct,
-    removeProduct,
-    getCartByTenant,
-    clearCart,
-    clearAllCarts,
-  } = useCartStore();
+  const addProduct = useCartStore((state) => state.addProduct);
+  const removeProduct = useCartStore((state) => state.removeProduct);
+  const clearCart = useCartStore((state) => state.clearCart);
+  const clearAllCarts = useCartStore((state) => state.clearAllCarts);
 
-  const productIds = getCartByTenant(tenantSubdomain);
+  const productIds = useCartStore(
+    useShallow((state) => state.tenantCarts[tenantSubdomain]?.productIds || []),
+  );
 
-  const toggleProduct = (productId: string) => {
-    if (productIds.includes(productId)) {
-      removeProduct(tenantSubdomain, productId);
-    } else {
-      addProduct(tenantSubdomain, productId);
-    }
-  };
+  const toggleProduct = useCallback(
+    (productId: string) => {
+      if (productIds.includes(productId)) {
+        removeProduct(tenantSubdomain, productId);
+      } else {
+        addProduct(tenantSubdomain, productId);
+      }
+    },
+    [addProduct, removeProduct, productIds, tenantSubdomain],
+  );
 
-  const isProductInCart = (productId: string) => {
-    return productIds.includes(productId);
-  };
+  const isProductInCart = useCallback(
+    (productId: string) => {
+      return productIds.includes(productId);
+    },
+    [productIds],
+  );
 
-  const clearTenantCart = () => {
+  const clearTenantCart = useCallback(() => {
     clearCart(tenantSubdomain);
-  };
+  }, [clearCart, tenantSubdomain]);
+
+  const handleAddProduct = useCallback(
+    (productId: string) => {
+      addProduct(tenantSubdomain, productId);
+    },
+    [addProduct, tenantSubdomain],
+  );
+
+  const handleRemoveProduct = useCallback(
+    (productId: string) => {
+      removeProduct(tenantSubdomain, productId);
+    },
+    [removeProduct, tenantSubdomain],
+  );
 
   return {
     productIds,
-    addProduct: (productId: string) => addProduct(tenantSubdomain, productId),
-    removeProduct: (productId: string) =>
-      removeProduct(tenantSubdomain, productId),
+    addProduct: handleAddProduct,
+    removeProduct: handleRemoveProduct,
     clearCart: clearTenantCart,
     clearAllCarts,
     toggleProduct,
