@@ -1,9 +1,9 @@
+import Stripe from "stripe";
 import { getPayload } from "payload";
 import config from "@payload-config";
-import Stripe from "stripe";
-import { stripe } from "@/lib/stripe";
 import { NextResponse } from "next/server";
 import { ExpandedLineItem } from "@/modules/checkout/types";
+import { stripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
   let event: Stripe.Event;
@@ -80,8 +80,8 @@ export async function POST(req: Request) {
               data: {
                 stripeCheckoutSessionId: data.id,
                 user: user.id,
-                product: item.price.product.metaData.id,
-                name: item.price.product.metaData.name,
+                product: item.price.product.metadata.id,
+                name: item.price.product.name,
               },
             });
           }

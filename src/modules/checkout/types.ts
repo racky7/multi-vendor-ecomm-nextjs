@@ -14,7 +14,7 @@ export type CheckoutMetadata = {
 export type ExpandedLineItem = Stripe.LineItem & {
   price: Stripe.Price & {
     product: Stripe.Product & {
-      metaData: ProductMetadata;
+      metadata: ProductMetadata;
     };
   };
 };
