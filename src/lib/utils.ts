@@ -12,7 +12,7 @@ export function generateTenantURL(subdomain: string) {
 export function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "INR",
+    currency: "USD",
     maximumFractionDigits: 0,
   }).format(Number(value));
 }
