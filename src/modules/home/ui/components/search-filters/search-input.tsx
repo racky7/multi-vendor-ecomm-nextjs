@@ -48,7 +48,7 @@ export const SearchInput = ({ disabled, data }: Props) => {
 
       {session.data?.user && (
         <Button variant="elevated" asChild>
-          <Link href={"/library"}>
+          <Link prefetch href={"/library"}>
             <BookMarkedIcon />
             Library
           </Link>
