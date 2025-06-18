@@ -87,9 +87,28 @@ export const libraryRouter = createTRPCRouter({
         },
       });
 
+      const dataWithSummarizedRewiews = await Promise.all(
+        productsData.docs.map(async (doc) => {
+          const reviews = await ctx.db.find({
+            collection: 'reviews',
+            pagination: false,
+            where: {
+              product: {
+                equals: doc.id
+              },
+            }
+          })
+
+          return ({
+            ...doc,
+            reviewCount: reviews.totalDocs,
+            reviewRating: reviews.docs.reduce((acc, review) => acc + review.rating, 0) / (reviews.totalDocs || 1),
+          })
+        }))
+
       return {
         ...productsData,
-        docs: productsData.docs.map((doc) => ({
+        docs: dataWithSummarizedRewiews.map((doc) => ({
           ...doc,
           image: doc.image as Media | null,
           tenant: doc.tenant as Tenant & { image: Media | null },

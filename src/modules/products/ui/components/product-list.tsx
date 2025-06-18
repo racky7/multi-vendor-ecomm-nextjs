@@ -71,8 +71,8 @@ export const ProductList = ({
               imageUrl={product.image?.url}
               tenantSubdomain={product.tenant?.subdomain}
               tenantImageUrl={product.tenant?.image?.url}
-              reviewCount={200}
-              reviewRating={4}
+              reviewCount={product.reviewCount}
+              reviewRating={product.reviewRating}
             />
           ))}
       </div>
