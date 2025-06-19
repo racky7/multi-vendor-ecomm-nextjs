@@ -121,6 +121,9 @@ export const checkoutRouter = createTRPCRouter({
             in: input.ids,
           },
         },
+        select: {
+          content: false,
+        },
       });
 
       if (data.docs.length !== input.ids.length) {

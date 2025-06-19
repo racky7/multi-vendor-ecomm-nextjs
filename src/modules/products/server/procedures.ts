@@ -21,6 +21,9 @@ export const productsRouter = createTRPCRouter({
         collection: "products",
         id: input.id,
         depth: 2,
+        select: {
+          content: false,
+        },
       });
 
       let isPurchased = false;
@@ -196,8 +199,12 @@ export const productsRouter = createTRPCRouter({
         where: where,
         page: input.cursor,
         limit: input.limit,
+        select: {
+          content: false,
+        },
       });
 
+      // TODO: We can improve this by fetching all reviews by product ids and then group by product review
       const dataWithSummarizedRewiews = await Promise.all(
         data.docs.map(async (doc) => {
           const reviews = await ctx.db.find({
