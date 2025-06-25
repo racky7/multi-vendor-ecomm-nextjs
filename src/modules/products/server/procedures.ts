@@ -5,6 +5,7 @@ import { Sort, Where } from "payload";
 import { z } from "zod";
 import { sortValues } from "../search-params";
 import { DEFAULT_LIMIT } from "@/constants";
+import { TRPCError } from "@trpc/server";
 
 export const productsRouter = createTRPCRouter({
   getOne: baseProcedure
@@ -25,6 +26,13 @@ export const productsRouter = createTRPCRouter({
           content: false,
         },
       });
+
+      if (product.isArchived) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Product not found",
+        })
+      }
 
       let isPurchased = false;
 
@@ -111,7 +119,11 @@ export const productsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      const where: Where = {};
+      const where: Where = {
+        isArchived: {
+          not_equals: true
+        }
+      };
       let sort: Sort = "-createdAt";
 
       if (input.sort === "trending") {
@@ -152,6 +164,14 @@ export const productsRouter = createTRPCRouter({
         where["tenant.subdomain"] = {
           equals: input.tenantSubdomain,
         };
+      } else {
+        // If we are loading products for public storefront
+        // Make sure not load products set to "isPrivate: true"
+        // These products are exclusively private to tentant store
+
+        where["isPrivate"] = {
+          not_equals: true,
+        }
       }
 
       if (input.category) {

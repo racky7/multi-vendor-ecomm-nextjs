@@ -14,6 +14,7 @@ export const Products: CollectionConfig = {
 
       return Boolean(tenant?.stripeDetailsSubmitted)
     },
+    delete: ({ req }) => isSuperAdmin(req?.user),
   },
   admin: {
     useAsTitle: "name",
@@ -27,8 +28,7 @@ export const Products: CollectionConfig = {
     },
     {
       name: "description",
-      // TODO: Change to richText
-      type: "text",
+      type: "richText",
     },
     {
       name: "price",
@@ -63,10 +63,27 @@ export const Products: CollectionConfig = {
     },
     {
       name: "content",
-      // TODO: Change to richText
-      type: "textarea",
+      type: "richText",
       admin: {
         description: "Protected content that is only visible to users who have purchased this product. Add product documentation, downloaded materials, or any other content that should be accessible only to buyers. Supports markdown formatting.",
+      }
+    },
+    {
+      name: "isPrivate",
+      label: "Private",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        description: "If checked this product will not be shown to public storefront.",
+      }
+    },
+    {
+      name: "isArchived",
+      label: "Archive",
+      type: "checkbox",
+      defaultValue: false,
+      admin: {
+        description: "Check if you want to delete or archive this product. Archived products will not be visible to users, but will still be accessible in the admin panel.",
       }
     }
   ],
