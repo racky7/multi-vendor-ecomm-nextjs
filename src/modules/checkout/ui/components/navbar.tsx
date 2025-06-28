@@ -14,7 +14,7 @@ export const Navbar = ({ subdomain }: Props) => {
       <div className="max-w-(--breakpoint-xl) mx-auto flex justify-between items-center h-full px-4 lg:px-12">
         <p className="text-xl">Checkout</p>
         <Button variant="elevated" asChild>
-          <Link href={`/${generateTenantURL(subdomain)}`}>
+          <Link href={`${generateTenantURL(subdomain)}`}>
             Continue Shopping
           </Link>
         </Button>

@@ -68,7 +68,7 @@ export const ProductView = ({ productId, tenantSubdomain }: Props) => {
               </div>
               <div className="px-6 py-4 flex items-center justify-center lg:border-r">
                 <Link
-                  href={`/${generateTenantURL(tenantSubdomain)}`}
+                  href={`${generateTenantURL(tenantSubdomain)}`}
                   className="flex items-center gap-2"
                 >
                   {data.tenant.image?.url && (

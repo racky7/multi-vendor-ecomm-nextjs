@@ -109,8 +109,8 @@ export const CheckoutView = ({ subdomain }: CheckoutViewProps) => {
                 isLast={index === data.docs.length - 1}
                 imageUrl={product.image?.url}
                 name={product.name}
-                productUrl={`/${generateTenantURL(subdomain)}/products/${product.id}`}
-                tenantUrl={`/${generateTenantURL(subdomain)}`}
+                productUrl={`${generateTenantURL(subdomain)}/products/${product.id}`}
+                tenantUrl={`${generateTenantURL(subdomain)}`}
                 tenantName={product.tenant.name}
                 price={product.price}
                 onRemove={() => {
