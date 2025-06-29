@@ -10,6 +10,8 @@ interface LayoutProps {
   params: Promise<{ subdomain: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 const Layout = async ({ children, params }: LayoutProps) => {
   const { subdomain } = await params;
 

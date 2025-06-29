@@ -11,6 +11,8 @@ interface Props {
   params: Promise<{ subdomain: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 const Page = async ({ params, searchParams }: Props) => {
   const { subdomain } = await params;
   const filters = await loadProductFilters(searchParams);
