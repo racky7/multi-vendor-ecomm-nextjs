@@ -1,9 +1,8 @@
-"use client";
 
 import { Input } from "@/components/ui/input";
 import { BookMarkedIcon, ListFilterIcon, SearchIcon } from "lucide-react";
 import { CategoriesSidebar } from "./categories-sidebar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CategoriesGetManyOutput } from "@/modules/categories/types";
 import { useTRPC } from "@/trpc/client";
@@ -13,13 +12,26 @@ import Link from "next/link";
 interface Props {
   disabled?: boolean;
   data: CategoriesGetManyOutput;
+  defaultValue?: string | undefined;
+  onChange?: (value: string | undefined) => void;
 }
 
-export const SearchInput = ({ disabled, data }: Props) => {
+export const SearchInput = ({ defaultValue, onChange, disabled, data }: Props) => {
+  const [searchValue, setSearchValue] = useState(defaultValue)
   const [sidebarOpen, setIsSidebarOpen] = useState(false);
 
   const trpc = useTRPC();
   const session = useQuery(trpc.auth.session.queryOptions());
+
+
+  useEffect(() => {
+    const timeOutId = setTimeout(() => {
+      onChange?.(searchValue)
+    }, 300)
+    return () => {
+      clearTimeout(timeOutId);
+    };
+  }, [searchValue, onChange])
 
   return (
     <div className="flex items-center gap-2 w-full">
@@ -34,6 +46,10 @@ export const SearchInput = ({ disabled, data }: Props) => {
           className="pl-8"
           placeholder="Search Products"
           disabled={disabled}
+          defaultValue={defaultValue}
+          onChange={(e) => {
+            setSearchValue(e.target.value);
+          }}
         />
       </div>
       <Button
